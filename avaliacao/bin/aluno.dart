@@ -8,6 +8,7 @@ class Aluno extends Pessoa {
     required super.email,
     required super.nome,
     required super.nascimento,
+    super.endereco,
     required this.notas,
   }) {
     ++Pessoa.codigo;

@@ -7,6 +7,7 @@ class Professor extends Pessoa {
     required super.email,
     required super.nome,
     required super.nascimento,
+    super.endereco,
     required this.salario,
   }) {
     ++Pessoa.codigo;

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'aluno.dart';
+import 'nota_aluno.dart';
 import 'pessoa.dart';
 
 class Interface {
@@ -12,8 +14,10 @@ class Interface {
         case '1':
           switch (acao) {
             case '1':
-              criaPessoa();
-              print();
+              Pessoa pessoa = criaPessoa();
+              NotaAluno notas = NotaAluno(notas: notas, curso: curso)
+              Aluno aluno = Aluno(email: pessoa.email, nome: pessoa.nome, nascimento: pessoa.nascimento, notas: )
+
               // criarAluno();
               break;
 
@@ -122,14 +126,14 @@ class Interface {
     int ano = int.tryParse(diaMesAno[2])!;
     int mes = int.tryParse(diaMesAno[1])!;
     int dia = int.tryParse(diaMesAno[0])!;
-    DateTime(ano,)
+    DateTime dataNascimento = DateTime(ano, mes, dia);
 
     print('Informe o endereço: ');
     endereco = stdin.readLineSync()!;
     Pessoa pessoa = Pessoa(
         email: email,
         nome: nomePessoa,
-        nascimento: dataNascimentoStr,
+        nascimento: dataNascimento,
         endereco: endereco);
     return pessoa;
   }

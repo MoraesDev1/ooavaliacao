@@ -1,4 +1,4 @@
-abstract class Pessoa {
+class Pessoa {
   static int codigo = 0;
   String email;
   String nome;

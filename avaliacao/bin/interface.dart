@@ -88,6 +88,8 @@ class Interface {
             case '4':
               repo.listarCursos();
               break;
+            case '5':
+              gerenciaCurso();
             default:
               print('Opção inválida');
               break;
@@ -117,7 +119,8 @@ class Interface {
              1. Criar
              2. Alterar
              3. Excluir
-             4. Listar''');
+             4. Listar
+             5. Gerenciar curso''');
     String opcServicos = stdin.readLineSync()!;
     return opcServicos;
   }
@@ -204,15 +207,15 @@ class Interface {
     return nome;
   }
 
-//   gerenciaCurso() {
-//     print('''Informe o número da ação desejada:
-//              1. Incluir
-//              2. Excluir
-//              3. Listar''');
-//     String opcaoGerenciaCursos = stdin.readLineSync()!;
-//   }
+  gerenciaCurso() {
+    print('''Informe o número da ação desejada:
+             1. Incluir
+             2. Excluir
+             3. Listar''');
+    String opcaoGerenciaCursos = stdin.readLineSync()!;
+  }
 
-// //incluir aluno ou professor?
+//incluir aluno ou professor?
 
 //   gerenciaNotas() {
 //     print('''Informe o número da ação desejada:

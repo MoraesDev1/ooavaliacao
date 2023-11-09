@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'aluno.dart';
+import 'curso.dart';
 import 'nota_aluno.dart';
 import 'professor.dart';
 import 'regrasnegocio.dart';
@@ -70,7 +71,9 @@ class Interface {
         case '3':
           switch (acao) {
             case '1':
-              // criarCurso();
+              Curso curso = criarCurso();
+              repo.cadastrarCurso(curso);
+              print('Curso cadastrado');
               break;
 
             case '2':
@@ -78,11 +81,12 @@ class Interface {
               break;
 
             case '3':
-              // excluirCurso();
+              String nome = identificadorCurso();
+              repo.excluirCurso(nome, repo.listaDeCursos);
               break;
 
             case '4':
-              // listarCurso();
+              repo.listarCursos();
               break;
             default:
               print('Opção inválida');
@@ -194,6 +198,12 @@ class Interface {
     return email;
   }
 
+  String identificadorCurso() {
+    print('Informe o nome do curso:');
+    String nome = stdin.readLineSync()!;
+    return nome;
+  }
+
 //   gerenciaCurso() {
 //     print('''Informe o número da ação desejada:
 //              1. Incluir
@@ -212,4 +222,16 @@ class Interface {
 //              4. Exibir média aritimética''');
 //     String opcaoGerenciaNotas = stdin.readLineSync()!;
 //   }
+  Curso criarCurso() {
+    String nome = '';
+    int totalAlunos = 0;
+
+    print('Informe o nome do curso: ');
+    nome = stdin.readLineSync()!;
+    print('Informe o total de alunos: ');
+    totalAlunos = int.parse(stdin.readLineSync()!);
+
+    Curso curso = Curso(nome: nome, totalAlunos: totalAlunos);
+    return curso;
+  }
 }

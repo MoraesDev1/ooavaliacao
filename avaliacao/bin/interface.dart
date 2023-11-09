@@ -97,15 +97,14 @@ class Interface {
               repo.cadastrarCurso(curso);
               print('Curso cadastrado');
               break;
-
             case '2':
-              String nome = identificadorCurso();
+              String nomeCurso = identificadorCurso();
 
               break;
 
             case '3':
-              String nome = identificadorCurso();
-              repo.excluirCurso(nome);
+              String nomeCurso = identificadorCurso();
+              repo.excluirCurso(nomeCurso);
               break;
 
             case '4':
@@ -250,5 +249,10 @@ class Interface {
         idCurso: idCurso,
         pessoas: alunosDoCurso);
     return curso;
+  }
+
+  pedeAlteracaoCurso(String nomeCurso) {
+    print(
+        'Qual alteração você deseja realizar no curso $nomeCurso?\n1 - Cadastrar Aluno\n2 - Remover Aluno\n3 - Lançar Notas');
   }
 }

@@ -41,7 +41,7 @@ class Interface {
               String email = pedeIdentificador();
               bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
               if (autorizaRemover) {
-                repo.excluirAluno(email, repo.cadastros);
+                repo.excluirAluno(email);
                 print('Aluno removido');
               } else {
                 print('Aluno não localizado');
@@ -76,7 +76,7 @@ class Interface {
               String email = pedeIdentificador();
               bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
               if (autorizaRemover) {
-                repo.excluirProfessor(email, repo.cadastros);
+                repo.excluirProfessor(email);
                 print('Professor removido');
               } else {
                 print('Professor não localizado');
@@ -99,20 +99,18 @@ class Interface {
               break;
 
             case '2':
-              // alterarCurso();
+              String nome = identificadorCurso();
+
               break;
 
             case '3':
               String nome = identificadorCurso();
-              repo.excluirCurso(nome, repo.listaDeCursos);
-
+              repo.excluirCurso(nome);
               break;
 
             case '4':
               repo.listarCursos();
               break;
-            case '5':
-              gerenciaCurso();
             default:
               print('Opção inválida');
               break;
@@ -234,25 +232,6 @@ class Interface {
     String nome = stdin.readLineSync()!;
     return nome;
   }
-
-  gerenciaCurso() {
-    print('''Informe o número da ação desejada:
-             1. Incluir
-             2. Excluir
-             3. Listar''');
-    String opcaoGerenciaCursos = stdin.readLineSync()!;
-  }
-
-//incluir aluno ou professor?
-
-//   gerenciaNotas() {
-//     print('''Informe o número da ação desejada:
-//              1. Incluir
-//              2. Alterar
-//              3. Excluir
-//              4. Exibir média aritimética''');
-//     String opcaoGerenciaNotas = stdin.readLineSync()!;
-//   }
 
   Curso criarCurso() {
     String nome = '';

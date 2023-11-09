@@ -105,6 +105,7 @@ class Interface {
             case '3':
               String nome = identificadorCurso();
               repo.excluirCurso(nome, repo.listaDeCursos);
+
               break;
 
             case '4':
@@ -252,16 +253,23 @@ class Interface {
 //              4. Exibir média aritimética''');
 //     String opcaoGerenciaNotas = stdin.readLineSync()!;
 //   }
+
   Curso criarCurso() {
     String nome = '';
     int totalAlunos = 0;
+    List<Pessoa> alunosDoCurso = [];
+    int idCurso = Curso.codigo;
 
     print('Informe o nome do curso: ');
     nome = stdin.readLineSync()!;
     print('Informe o total de alunos: ');
     totalAlunos = int.parse(stdin.readLineSync()!);
 
-    Curso curso = Curso(nome: nome, totalAlunos: totalAlunos);
+    Curso curso = Curso(
+        nome: nome,
+        totalAlunos: totalAlunos,
+        idCurso: idCurso,
+        pessoas: alunosDoCurso);
     return curso;
   }
 }

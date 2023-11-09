@@ -16,7 +16,7 @@ class Repositorios {
     for (Pessoa pessoa in cadastros) {
       if (pessoa is Aluno) {
         print(
-            '\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}');
       }
     }
   }
@@ -26,7 +26,7 @@ class Repositorios {
     for (Pessoa pessoa in cadastros) {
       if (pessoa is Professor) {
         print(
-            '\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
       }
     }
   }
@@ -60,6 +60,15 @@ class Repositorios {
         return print('Um curso não pode ser excluído com alunos cadastrados.');
       } else {
         return print('Curso inexistente.');
+      }
+    }
+  }
+
+  excluirProfessor(String email, List<Pessoa> cadastros) {
+    for (Pessoa cadastro in cadastros) {
+      if (cadastro is Professor && cadastro.email == email) {
+        cadastros.remove(cadastro);
+        break;
       }
     }
   }

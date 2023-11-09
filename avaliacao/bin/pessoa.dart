@@ -4,9 +4,11 @@ class Pessoa {
   String nome;
   DateTime nascimento;
   String? endereco;
+  int registro;
 
   Pessoa(
       {required this.email,
+      required this.registro,
       required this.nome,
       required this.nascimento,
       this.endereco = ''}) {

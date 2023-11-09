@@ -2,6 +2,7 @@ import 'dart:io';
 import 'aluno.dart';
 import 'curso.dart';
 import 'nota_aluno.dart';
+import 'pessoa.dart';
 import 'professor.dart';
 import 'regrasnegocio.dart';
 import 'repositorio.dart';
@@ -9,34 +10,43 @@ import 'repositorio.dart';
 class Interface {
   Repositorios repo = Repositorios();
   RegrasNegocio rn = RegrasNegocio();
+
   menuPrincipal() {
     String objEscolhido = '';
     while (objEscolhido != 'sair') {
       objEscolhido = exibeMenuPrincipal(objEscolhido);
+      if (objEscolhido == '0') {
+        break;
+      }
       String acao = menuServicos();
       switch (objEscolhido) {
         case '1':
           switch (acao) {
             case '1':
               Aluno aluno = criarAluno();
-              repo.cadastrarPessoa(aluno);
-              print('Aluno cadastrado');
+              bool
+                  autorizaCadastrar = //verificação de email deve ocorrer ao solicitar o email
+                  rn.autorizaCadastrar(repo.cadastros, aluno.email);
+              if (autorizaCadastrar) {
+                repo.cadastrarPessoa(aluno);
+                print('Aluno Cadastrado');
+              } else {
+                print('E-mail informado já cadastrado');
+              }
               break;
-
             case '2':
               // alterarAluno();
               break;
-
             case '3':
               String email = pedeIdentificador();
-              if (rn.autorizaRemover(repo.cadastros, email)) {
+              bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
+              if (autorizaRemover) {
                 repo.excluirAluno(email, repo.cadastros);
-                print('Cadastro removido');
+                print('Aluno removido');
               } else {
-                print('Cadastro não localizado');
+                print('Aluno não localizado');
               }
               break;
-
             case '4':
               repo.listarAlunos();
               break;
@@ -49,17 +59,29 @@ class Interface {
           switch (acao) {
             case '1':
               Professor professor = criarProfessor();
+              bool autorizaCadastrar =
+                  rn.autorizaCadastrar(repo.cadastros, professor.email);
               repo.cadastrarPessoa(professor);
-              print('Professor cadastrado');
+              if (autorizaCadastrar) {
+                repo.cadastrarPessoa(professor);
+                print('Professor cadastrado');
+              } else {
+                print('E-mail informado já cadastrado');
+              }
               break;
             case '2':
               // alterarProfessor();
               break;
-
             case '3':
-              // excluirProfessor();
+              String email = pedeIdentificador();
+              bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
+              if (autorizaRemover) {
+                repo.excluirProfessor(email, repo.cadastros);
+                print('Professor removido');
+              } else {
+                print('Professor não localizado');
+              }
               break;
-
             case '4':
               repo.listarProfessores();
               break;
@@ -130,10 +152,12 @@ class Interface {
     String dataNascimentoStr = '';
     String email = '';
     String? endereco;
+    int registro = Pessoa.codigo;
     List<NotaAluno> notas = [];
 
     print('Informe o e-mail: ');
     email = stdin.readLineSync()!;
+
     print('Informe o nome: ');
     nomeAluno = stdin.readLineSync()!;
 
@@ -148,6 +172,7 @@ class Interface {
     print('Informe o endereço: ');
     endereco = stdin.readLineSync()!;
     Aluno aluno = Aluno(
+        registro: registro,
         email: email,
         nome: nomeAluno,
         nascimento: dataNascimento,
@@ -161,6 +186,7 @@ class Interface {
     String dataNascimentoStr = '';
     String email = '';
     String? endereco;
+    int registro = Pessoa.codigo;
 
     print('Informe o e-mail: ');
     email = stdin.readLineSync()!;
@@ -175,12 +201,13 @@ class Interface {
     int dia = int.tryParse(diaMesAno[0])!;
     DateTime dataNascimento = DateTime(ano, mes, dia);
 
-    double salario = solicitaSalario();
-
     print('Informe o endereço: ');
     endereco = stdin.readLineSync()!;
 
+    double salario = solicitaSalario();
+
     Professor professor = Professor(
+        registro: registro,
         email: email,
         nome: nomeProfessor,
         nascimento: dataNascimento,

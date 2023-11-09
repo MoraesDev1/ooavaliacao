@@ -40,6 +40,30 @@ class Repositorios {
     }
   }
 
+  cadastrarCurso(Curso curso) {
+    listaDeCursos.add(curso);
+  }
+
+  listarCursos() {
+    print('Cursos:');
+    for (Curso curso in listaDeCursos) {
+      print('\nCurso: ${curso.nome}\nTotal de alunos: ${curso.totalAlunos}');
+    }
+  }
+
+  excluirCurso(String nome, List<Curso> cursos) {
+    for (Curso curso in cursos) {
+      if (curso.pessoas.length < 1 && curso.nome == nome) {
+        cursos.remove(curso);
+        return print('Curso removido com sucesso');
+      } else if (curso.pessoas.length > 0) {
+        return print('Um curso não pode ser excluído com alunos cadastrados.');
+      } else {
+        return print('Curso inexistente.');
+      }
+    }
+  }
+
   excluirProfessor(String email, List<Pessoa> cadastros) {
     for (Pessoa cadastro in cadastros) {
       if (cadastro is Professor && cadastro.email == email) {

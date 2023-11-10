@@ -31,7 +31,7 @@ class Repositorios {
     }
   }
 
-  excluirAluno(String email, List<Pessoa> cadastros) {
+  excluirAluno(String email) {
     for (Pessoa cadastro in cadastros) {
       if (cadastro is Aluno && cadastro.email == email) {
         cadastros.remove(cadastro);
@@ -40,7 +40,7 @@ class Repositorios {
     }
   }
 
-  excluirProfessor(String email, List<Pessoa> cadastros) {
+  excluirProfessor(String email) {
     for (Pessoa cadastro in cadastros) {
       if (cadastro is Professor && cadastro.email == email) {
         cadastros.remove(cadastro);
@@ -61,7 +61,7 @@ class Repositorios {
     }
   }
 
-  excluirCurso(String nome, List<Curso> listaDeCursos) {
+  excluirCurso(String nome) {
     for (Curso curso in listaDeCursos) {
       if (curso.pessoas.isEmpty && curso.nome == nome) {
         listaDeCursos.remove(curso);
@@ -73,5 +73,10 @@ class Repositorios {
         return print('Curso inexistente.');
       }
     }
+  }
+
+  alterarCurso(String nome){
+    
+
   }
 }

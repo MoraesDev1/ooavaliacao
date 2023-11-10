@@ -18,4 +18,16 @@ class RegrasNegocio {
     }
     return false;
   }
+
+  exibeMedia(List<double> notas) {
+    double media = 0;
+    for (double i in notas) {
+      media *= i;
+    }
+    return media / 3;
+  }
+
+  autorizaIncluirCurso() {}
+
+  removeNotas() {}
 }

@@ -66,7 +66,7 @@ class Repositorios {
       if (curso.pessoas.isEmpty && curso.nome == nome) {
         listaDeCursos.remove(curso);
         return print('Curso removido');
-      } else if (curso.pessoas.isEmpty && curso.nome == nome) {
+      } else if (curso.pessoas.isNotEmpty && curso.nome == nome) {
         return print(
             'O curso $nome tem ${curso.pessoas.length} pessoas cadastradas!\nUm curso não pode ser excluído com alunos cadastrados!');
       } else {
@@ -75,8 +75,57 @@ class Repositorios {
     }
   }
 
-  alterarCurso(String nome){
-    
+  incluirPessoaCurso(String nomeCurso, String email) {
+    for (Pessoa pessoa in cadastros) {
+      if (pessoa.email == email && pessoa is Aluno) {
+        for (Curso i in listaDeCursos) {
+          if (i == nomeCurso) {
+            i.pessoas.add(pessoa);
+            return print('Aluno cadastrado.');
+          }
+        }
+      } else if (pessoa.email == email && pessoa is Professor) {
+        for (Curso i in listaDeCursos) {
+          if (i == nomeCurso) {
+            i.pessoas.add(pessoa);
+            return print('Professor cadastrado.');
+          }
+        }
+      }
+    }
+  }
 
+  removerPessoaCurso(String nomeCurso, String email) {
+    for (Pessoa pessoa in cadastros) {
+      if (pessoa.email == email && pessoa is Aluno) {
+        for (Curso i in listaDeCursos) {
+          if (i == nomeCurso) {
+            i.pessoas.remove(pessoa);
+            return print('Aluno removido.');
+          }
+        }
+      } else if (pessoa.email == email && pessoa is Professor) {
+        for (Curso i in listaDeCursos) {
+          if (i == nomeCurso) {
+            i.pessoas.remove(pessoa);
+            return print('Professor removido.');
+          }
+        }
+      }
+    }
+  }
+
+  listarPessoaCurso(String nomeCurso, String pessoa) {
+    for (Curso curso in listaDeCursos) {
+      if (curso == nomeCurso) {
+        for (Pessoa i in curso.pessoas) {
+          if (i is Aluno && pessoa == '1') {
+            print(i);
+          } else if (i is Professor && pessoa == '2') {
+            print(i);
+          }
+        }
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'pessoa.dart';
 import 'professor.dart';
 import 'regrasnegocio.dart';
 import 'repositorio.dart';
+import 'utils.dart';
 
 class Interface {
   Repositorios repo = Repositorios();
@@ -161,11 +162,15 @@ class Interface {
 
     print('Informe o data de nascimento: Ex: 99/99/9999');
     dataNascimentoStr = stdin.readLineSync()!;
-    List<String> diaMesAno = dataNascimentoStr.trim().split('/');
-    int ano = int.tryParse(diaMesAno[2])!;
-    int mes = int.tryParse(diaMesAno[1])!;
-    int dia = int.tryParse(diaMesAno[0])!;
-    DateTime dataNascimento = DateTime(ano, mes, dia);
+
+    // List<String> diaMesAno = dataNascimentoStr.trim().split('/');
+    // int ano = int.tryParse(diaMesAno[2])!;
+    // int mes = int.tryParse(diaMesAno[1])!;
+    // int dia = int.tryParse(diaMesAno[0])!;
+    // DateTime dataNascimento = DateTime(ano, mes, dia);
+
+    DateTime dataNascimentoDT =
+        Utils.formatarDataParaDateTime(dataNascimentoStr);
 
     print('Informe o endereço: ');
     endereco = stdin.readLineSync()!;
@@ -173,7 +178,7 @@ class Interface {
         registro: registro,
         email: email,
         nome: nomeAluno,
-        nascimento: dataNascimento,
+        nascimento: dataNascimentoDT,
         endereco: endereco,
         notas: notas);
     return aluno;

@@ -2,6 +2,7 @@ import 'aluno.dart';
 import 'curso.dart';
 import 'pessoa.dart';
 import 'professor.dart';
+import 'utils.dart';
 
 class Repositorios {
   List<Pessoa> cadastros = [];
@@ -15,8 +16,10 @@ class Repositorios {
     print('Alunos:');
     for (Pessoa pessoa in cadastros) {
       if (pessoa is Aluno) {
+        String dataNasimentoString =
+            Utils.converterDateTimeParaString(pessoa.nascimento);
         print(
-            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${dataNasimentoString}\nEndereço: ${pessoa.endereco}');
       }
     }
   }
@@ -25,8 +28,10 @@ class Repositorios {
     print('Professores:');
     for (Pessoa pessoa in cadastros) {
       if (pessoa is Professor) {
+        String dataNasimentoString =
+            Utils.converterDateTimeParaString(pessoa.nascimento);
         print(
-            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${pessoa.nascimento}\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${dataNasimentoString}\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
       }
     }
   }

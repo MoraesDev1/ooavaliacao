@@ -183,31 +183,26 @@ class Interface {
     int registro = Pessoa.codigo;
     List<NotaAluno> notas = [];
 
-    print('Informe o e-mail: ');
+    print('\nInforme o e-mail: ');
     email = stdin.readLineSync()!;
 
-    print('Informe o nome: ');
+    print('\nInforme o nome: ');
     nomeAluno = stdin.readLineSync()!;
 
-    print('Informe o data de nascimento: Ex: 99/99/9999');
-    dataNascimentoStr = stdin.readLineSync()!;
-
-    // List<String> diaMesAno = dataNascimentoStr.trim().split('/');
-    // int ano = int.tryParse(diaMesAno[2])!;
-    // int mes = int.tryParse(diaMesAno[1])!;
-    // int dia = int.tryParse(diaMesAno[0])!;
-    // DateTime dataNascimento = DateTime(ano, mes, dia);
-
-    DateTime dataNascimentoDT =
-        Utils.formatarDataParaDateTime(dataNascimentoStr);
-
-    print('Informe o endereço: ');
+    DateTime dataNascimentoDateTime = DateTime(0, 0, 0);
+    while (dataNascimentoDateTime == DateTime(0, 0, 0)) {
+      print('\nInforme o data de nascimento: ');
+      dataNascimentoStr = stdin.readLineSync()!;
+      dataNascimentoDateTime =
+          Utils.converterStringParaDateTime(dataNascimentoStr);
+    }
+    print('\nInforme o endereço: ');
     endereco = stdin.readLineSync()!;
     Aluno aluno = Aluno(
         registro: registro,
         email: email,
         nome: nomeAluno,
-        nascimento: dataNascimentoDT,
+        nascimento: dataNascimentoDateTime,
         endereco: endereco,
         notas: notas);
     return aluno;
@@ -220,20 +215,19 @@ class Interface {
     String? endereco;
     int registro = Pessoa.codigo;
 
-    print('Informe o e-mail: ');
+    print('\nInforme o e-mail: ');
     email = stdin.readLineSync()!;
-    print('Informe o nome: ');
+    print('\nInforme o nome: ');
     nomeProfessor = stdin.readLineSync()!;
 
-    print('Informe o data de nascimento: ');
-    dataNascimentoStr = stdin.readLineSync()!;
-    List<String> diaMesAno = dataNascimentoStr.trim().split('/');
-    int ano = int.tryParse(diaMesAno[2])!;
-    int mes = int.tryParse(diaMesAno[1])!;
-    int dia = int.tryParse(diaMesAno[0])!;
-    DateTime dataNascimento = DateTime(ano, mes, dia);
-
-    print('Informe o endereço: ');
+    DateTime dataNascimentoDateTime = DateTime(0, 0, 0);
+    while (dataNascimentoDateTime == DateTime(0, 0, 0)) {
+      print('\nInforme o data de nascimento: ');
+      dataNascimentoStr = stdin.readLineSync()!;
+      dataNascimentoDateTime =
+          Utils.converterStringParaDateTime(dataNascimentoStr);
+    }
+    print('\nInforme o endereço: ');
     endereco = stdin.readLineSync()!;
 
     double salario = solicitaSalario();
@@ -242,26 +236,26 @@ class Interface {
         registro: registro,
         email: email,
         nome: nomeProfessor,
-        nascimento: dataNascimento,
+        nascimento: dataNascimentoDateTime,
         endereco: endereco,
         salario: salario);
     return professor;
   }
 
   double solicitaSalario() {
-    print('Informe o salário do professor: ');
+    print('\nInforme o salário do professor: ');
     double salario = double.parse(stdin.readLineSync()!);
     return salario;
   }
 
   String pedeIdentificador() {
-    print('Informe o e-mail cadastrado:');
+    print('\nInforme o e-mail cadastrado:');
     String email = stdin.readLineSync()!;
     return email;
   }
 
   String identificadorCurso() {
-    print('Informe o nome do curso:');
+    print('\nInforme o nome do curso:');
     String nome = stdin.readLineSync()!;
     return nome;
   }
@@ -272,9 +266,9 @@ class Interface {
     List<Pessoa> alunosDoCurso = [];
     int idCurso = Curso.codigo;
 
-    print('Informe o nome do curso: ');
+    print('\nInforme o nome do curso: ');
     nome = stdin.readLineSync()!;
-    print('Informe o total de alunos: ');
+    print('\nInforme o total de alunos: ');
     totalAlunos = int.parse(stdin.readLineSync()!);
 
     Curso curso = Curso(
@@ -287,18 +281,18 @@ class Interface {
 
   String pedeAlteracaoCurso(String nomeCurso) {
     print(
-        'Qual alteração você deseja realizar no curso $nomeCurso?\n1. Cadastrar\n2. Remover\n3. Listar');
+        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1. Cadastrar\n2. Remover\n3. Listar');
     String opAlteraCurso = stdin.readLineSync()!;
     return opAlteraCurso;
   }
 
   String informaPessoaIncluirCurso(bool id) {
     if (id == true) {
-      print('Informe o email do aluno a ser cadastrado:');
+      print('\nInforme o email do aluno a ser cadastrado:');
       String email = stdin.readLineSync()!;
       return email;
     } else {
-      print('Informe o email do Professor a ser cadastrado:');
+      print('\nInforme o email do Professor a ser cadastrado:');
       String email = stdin.readLineSync()!;
       return email;
     }
@@ -306,11 +300,11 @@ class Interface {
 
   String informaPessoaRemoverCurso(bool id) {
     if (id == true) {
-      print('Informe o email do aluno a ser removido:');
+      print('\nInforme o email do aluno a ser removido:');
       String email = stdin.readLineSync()!;
       return email;
     } else {
-      print('Informe o email do Professor a ser removido:');
+      print('\nInforme o email do Professor a ser removido:');
       String email = stdin.readLineSync()!;
       return email;
     }

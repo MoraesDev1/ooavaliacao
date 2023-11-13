@@ -32,15 +32,23 @@ class Interface {
                 repo.cadastrarPessoa(aluno);
                 print('Aluno Cadastrado');
               } else {
+                Pessoa.codigo--;
                 print('E-mail informado já cadastrado');
               }
               break;
             case '2':
-              // alterarAluno();
+              String identificador = pedeIdentificador();
+              if (rn.cadastroExistente(repo.cadastros, identificador)) {
+                repo.alterarAluno(identificador);
+                print('Alteração realizada');
+              } else {
+                print('Aluno não localizado');
+              }
               break;
             case '3':
               String email = pedeIdentificador();
-              bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
+              bool autorizaRemover =
+                  rn.cadastroExistente(repo.cadastros, email);
               if (autorizaRemover) {
                 repo.excluirAluno(email);
                 print('Aluno removido');
@@ -67,15 +75,23 @@ class Interface {
                 repo.cadastrarPessoa(professor);
                 print('Professor cadastrado');
               } else {
+                Pessoa.codigo--;
                 print('E-mail informado já cadastrado');
               }
               break;
             case '2':
-              // alterarProfessor();
+              String identificador = pedeIdentificador();
+              if (rn.cadastroExistente(repo.cadastros, identificador)) {
+                repo.alterarProfessor(identificador);
+                print('Alteração realizada');
+              } else {
+                print('Professor não localizado');
+              }
               break;
             case '3':
               String email = pedeIdentificador();
-              bool autorizaRemover = rn.autorizaRemover(repo.cadastros, email);
+              bool autorizaRemover =
+                  rn.cadastroExistente(repo.cadastros, email);
               if (autorizaRemover) {
                 repo.excluirProfessor(email);
                 print('Professor removido');

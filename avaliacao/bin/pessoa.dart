@@ -1,5 +1,5 @@
 class Pessoa {
-  static int codigo = 0;
+  static int codigo = 1;
   String email;
   String nome;
   DateTime nascimento;
@@ -11,7 +11,5 @@ class Pessoa {
       required this.registro,
       required this.nome,
       required this.nascimento,
-      this.endereco = ''}) {
-    ++codigo;
-  }
+      this.endereco = ''});
 }

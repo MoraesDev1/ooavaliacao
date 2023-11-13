@@ -2,15 +2,15 @@ import 'pessoa.dart';
 
 class RegrasNegocio {
   bool autorizaCadastrar(List<Pessoa> cadastros, String email) {
-    for (Pessoa cadastro in cadastros) {
-      if (email != cadastro.email) {
-        return true;
+    for (Pessoa pessoa in cadastros) {
+      if (email == pessoa.email) {
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
-  bool autorizaRemover(List<Pessoa> cadastros, String email) {
+  bool cadastroExistente(List<Pessoa> cadastros, String email) {
     for (Pessoa cadastro in cadastros) {
       if (email == cadastro.email) {
         return true;

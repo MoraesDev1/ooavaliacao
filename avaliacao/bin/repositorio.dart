@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'aluno.dart';
 import 'curso.dart';
 import 'pessoa.dart';
@@ -19,7 +21,7 @@ class Repositorios {
         String dataNasimentoString =
             Utils.converterDateTimeParaString(pessoa.nascimento);
         print(
-            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${dataNasimentoString}\nEndereço: ${pessoa.endereco}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: $dataNasimentoString\nEndereço: ${pessoa.endereco}');
       }
     }
   }
@@ -31,7 +33,7 @@ class Repositorios {
         String dataNasimentoString =
             Utils.converterDateTimeParaString(pessoa.nascimento);
         print(
-            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: ${dataNasimentoString}\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
+            '\nCódigo: ${pessoa.registro}\nNome: ${pessoa.nome}\nE-mail: ${pessoa.email}\nData de Nascimento: $dataNasimentoString\nEndereço: ${pessoa.endereco}\nSalário: ${pessoa.salario}');
       }
     }
   }
@@ -50,6 +52,64 @@ class Repositorios {
       if (cadastro is Professor && cadastro.email == email) {
         cadastros.remove(cadastro);
         break;
+      }
+    }
+  }
+
+  alterarAluno(String identificador) {
+    for (Pessoa pessoa in cadastros) {
+      if (identificador == pessoa.email) {
+        print(
+            '\nQual informação deseja alterar?\n\n1 - Nome\n2 - Data de Nascimento\n3 - Endereço');
+        String alteracaoAluno = stdin.readLineSync()!;
+        String novaInformacao = '';
+        switch (alteracaoAluno) {
+          case '1':
+            print('Digite o novo Nome:');
+            novaInformacao = stdin.readLineSync()!;
+            pessoa.nome = novaInformacao;
+          case '2':
+            print('Digite a nova Data de Nascimento:');
+            novaInformacao = stdin.readLineSync()!;
+            DateTime novaData =
+                Utils.converterStringParaDateTime(novaInformacao);
+            pessoa.nascimento = novaData;
+          case '3':
+            print('Digite o novo Endereço:');
+            novaInformacao = stdin.readLineSync()!;
+            pessoa.endereco = novaInformacao;
+          default:
+            print('Açao inválida');
+        }
+      }
+    }
+  }
+
+  alterarProfessor(String identificador) {
+    for (Pessoa pessoa in cadastros) {
+      if (identificador == pessoa.email) {
+        print(
+            '\nQual informação deseja alterar?\n\n1 - Nome\n2 - Data de Nascimento\n3 - Endereço');
+        String alteracaoAluno = stdin.readLineSync()!;
+        String novaInformacao = '';
+        switch (alteracaoAluno) {
+          case '1':
+            print('Digite o novo Nome:');
+            novaInformacao = stdin.readLineSync()!;
+            pessoa.nome = novaInformacao;
+          case '2':
+            print('Digite a nova Data de Nascimento:');
+            novaInformacao = stdin.readLineSync()!;
+            DateTime novaData =
+                Utils.converterStringParaDateTime(novaInformacao);
+            pessoa.nascimento = novaData;
+          case '3':
+            print('Digite o novo Endereço:');
+            novaInformacao = stdin.readLineSync()!;
+            pessoa.endereco = novaInformacao;
+          default:
+            print('Açao inválida');
+        }
       }
     }
   }

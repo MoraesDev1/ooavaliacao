@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:test/expect.dart';
+
 import 'aluno.dart';
 import 'curso.dart';
 import 'pessoa.dart';
@@ -122,7 +124,7 @@ class Repositorios {
     print('Cursos:');
     for (Curso curso in listaDeCursos) {
       print(
-          '\nCurso: ${curso.nome}\nMáximo de alunos: ${curso.totalAlunos}\nAlunos Cadastrados${curso.pessoas.length}\n');
+          '\nCurso: ${curso.nome}\nMáximo de alunos: ${curso.totalAlunos}\nAlunos Cadastrados: ${curso.pessoas.length}\n');
     }
   }
 
@@ -130,12 +132,12 @@ class Repositorios {
     for (Curso curso in listaDeCursos) {
       if (curso.pessoas.isEmpty && curso.nome == nome) {
         listaDeCursos.remove(curso);
-        return print('Curso removido');
+        return print('\nCurso removido');
       } else if (curso.pessoas.isNotEmpty && curso.nome == nome) {
         return print(
-            'O curso $nome tem ${curso.pessoas.length} pessoas cadastradas!\nUm curso não pode ser excluído com alunos cadastrados!');
+            '\nO curso $nome tem ${curso.pessoas.length} pessoas cadastradas!\nUm curso não pode ser excluído com alunos cadastrados!');
       } else {
-        return print('Curso inexistente.');
+        return print('\nCurso inexistente.');
       }
     }
   }
@@ -143,53 +145,72 @@ class Repositorios {
   incluirPessoaCurso(String nomeCurso, String email) {
     for (Pessoa pessoa in cadastros) {
       if (pessoa.email == email && pessoa is Aluno) {
-        for (Curso i in listaDeCursos) {
-          if (i == nomeCurso) {
-            i.pessoas.add(pessoa);
-            return print('Aluno cadastrado.');
+        for (Curso curso in listaDeCursos) {
+          if (curso.nome == nomeCurso) {
+            curso.pessoas.add(pessoa);
+            return print('\nAluno cadastrado');
+          } else {
+            return print('\nCurso não localizado');
           }
         }
       } else if (pessoa.email == email && pessoa is Professor) {
-        for (Curso i in listaDeCursos) {
-          if (i == nomeCurso) {
-            i.pessoas.add(pessoa);
-            return print('Professor cadastrado.');
+        for (Curso curso in listaDeCursos) {
+          if (curso.nome == nomeCurso) {
+            curso.pessoas.add(pessoa);
+            return print('\nProfessor cadastrado');
+          } else {
+            return print('\nCurso não localizado');
           }
         }
+      } else {
+        return print('\nE-mail não localizado na lista de cadastros');
       }
     }
   }
 
   removerPessoaCurso(String nomeCurso, String email) {
-    for (Pessoa pessoa in cadastros) {
-      if (pessoa.email == email && pessoa is Aluno) {
-        for (Curso i in listaDeCursos) {
-          if (i == nomeCurso) {
-            i.pessoas.remove(pessoa);
-            return print('Aluno removido.');
-          }
-        }
-      } else if (pessoa.email == email && pessoa is Professor) {
-        for (Curso i in listaDeCursos) {
-          if (i == nomeCurso) {
-            i.pessoas.remove(pessoa);
-            return print('Professor removido.');
+    for (Curso curso in listaDeCursos) {
+      if (curso.nome == nomeCurso) {
+        for (Pessoa pessoa in curso.pessoas) {
+          if (pessoa.email == email && pessoa is Aluno) {
+            curso.pessoas.remove(pessoa);
+            return print('Aluno removido');
+          } else if (pessoa.email == email && pessoa is Professor) {
+            curso.pessoas.remove(pessoa);
+            return print('Professor removido');
+          } else {
+            return print('E-mail não localizado para este curso');
           }
         }
       }
     }
   }
 
-  listarPessoaCurso(String nomeCurso, String pessoa) {
+  listarAlunosCurso(String nomeCurso) {
     for (Curso curso in listaDeCursos) {
-      if (curso == nomeCurso) {
-        for (Pessoa i in curso.pessoas) {
-          if (i is Aluno && pessoa == '1') {
-            print(i);
-          } else if (i is Professor && pessoa == '2') {
-            print(i);
+      if (curso.nome == nomeCurso) {
+        print('\nAlunos cadastrados no curso de $nomeCurso:\n');
+        for (Pessoa pessoa in curso.pessoas) {
+          if (pessoa is Aluno) {
+            print('Nome: ${pessoa.nome}');
           }
         }
+      } else {
+        return print('Curso não localizado');
+      }
+    }
+  }
+
+  listarProfessoresCurso(String nomeCurso) {
+    for (Curso curso in listaDeCursos) {
+      if (curso.nome == nomeCurso) {
+        for (Pessoa pessoa in curso.pessoas) {
+          if (pessoa is Professor) {
+            print('Nome: ${pessoa.nome}');
+          }
+        }
+      } else {
+        return print('Curso não localizado');
       }
     }
   }

@@ -116,37 +116,41 @@ class Interface {
               break;
             case '2':
               String nomeCurso = identificadorCurso();
+              String alunoOuProfessor = menuAlunoOuProfessor();
               String opAlteraCurso = pedeAlteracaoCurso(nomeCurso);
-              switch (objEscolhido) {
+              switch (alunoOuProfessor) {
                 case '1':
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Aluno no curso
-                      String email = informaPessoaIncluirCurso(true);
+                      print('\nInforme o email do aluno a ser cadastrado:');
+                      String email = stdin.readLineSync()!;
                       repo.incluirPessoaCurso(nomeCurso, email);
                     case '2':
                       //Remoção de Aluno do curso
-                      String email = informaPessoaRemoverCurso(true);
+                      print('\nInforme o email do aluno a ser removido:');
+                      String email = stdin.readLineSync()!;
                       repo.removerPessoaCurso(nomeCurso, email);
                     case '3':
                       //Listar Alunos
-                      repo.listarPessoaCurso(nomeCurso, objEscolhido);
+                      repo.listarAlunosCurso(nomeCurso);
                   }
                 case '2':
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Professor no curso
-                      String email = informaPessoaIncluirCurso(false);
+                      print('\nInforme o email do Professor a ser cadastrado:');
+                      String email = stdin.readLineSync()!;
                       repo.incluirPessoaCurso(nomeCurso, email);
-                      print('Professor cadastrado.');
                     case '2':
                       //Remoção de Professor do curso
-                      String email = informaPessoaRemoverCurso(false);
+                      print('\nInforme o email do Professor a ser removido:');
+                      String email = stdin.readLineSync()!;
                       repo.removerPessoaCurso(nomeCurso, email);
-                      print('Professor removido.');
+
                     case '3':
                       //Listar professores.
-                      repo.listarPessoaCurso(nomeCurso, objEscolhido);
+                      repo.listarProfessoresCurso(nomeCurso);
                   }
               }
               break;
@@ -302,18 +306,6 @@ class Interface {
     return opAlteraCurso;
   }
 
-  String informaPessoaIncluirCurso(bool id) {
-    if (id == true) {
-      print('\nInforme o email do aluno a ser cadastrado:');
-      String email = stdin.readLineSync()!;
-      return email;
-    } else {
-      print('\nInforme o email do Professor a ser cadastrado:');
-      String email = stdin.readLineSync()!;
-      return email;
-    }
-  }
-
   String informaPessoaRemoverCurso(bool id) {
     if (id == true) {
       print('\nInforme o email do aluno a ser removido:');
@@ -324,6 +316,12 @@ class Interface {
       String email = stdin.readLineSync()!;
       return email;
     }
+  }
+
+  menuAlunoOuProfessor() {
+    print('\nVocê deseja realizar está ação para:\n1 - Aluno\n2 - Professor');
+    String alunoOuProfessor = stdin.readLineSync()!;
+    return alunoOuProfessor;
   }
 
   informarNota() {

@@ -249,5 +249,22 @@ class Repositorios {
     }
   }
 
-  exibirNotas(String nomeCurso, String email) {}
+  exibirNotas(String nomeCurso, String email) {
+    for (Pessoa pessoa in cadastros) {
+      if (pessoa.email == email && pessoa is Aluno) {
+        for (Curso curso in listaDeCursos) {
+          if (curso.nome == nomeCurso && curso.pessoas.contains(pessoa)) {
+            pessoa.notas.forEach(
+              (element) {
+                if (element.curso.nome == nomeCurso) {
+                  print(
+                      '\nNota 1: ${element.notas[0]}\nNota 2: ${element.notas[1]}\nNota 3: ${element.notas[2]}');
+                }
+              },
+            );
+          }
+        }
+      }
+    }
+  }
 }

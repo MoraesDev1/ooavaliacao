@@ -117,9 +117,11 @@ class Interface {
             case '2':
               String nomeCurso = identificadorCurso();
               String alunoOuProfessor = menuAlunoOuProfessor();
-              String opAlteraCurso = pedeAlteracaoCurso(nomeCurso);
+
               switch (alunoOuProfessor) {
                 case '1':
+                  String opAlteraCurso =
+                      pedeAlteracaoCurso(nomeCurso); //menualteracaoaluno
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Aluno no curso
@@ -136,6 +138,8 @@ class Interface {
                       repo.listarAlunosCurso(nomeCurso);
                   }
                 case '2':
+                  String opAlteraCurso =
+                      pedeAlteracaoCurso(nomeCurso); // menualteracaoprof
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Professor no curso

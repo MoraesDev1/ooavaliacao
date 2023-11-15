@@ -214,13 +214,13 @@ class Repositorios {
   listarProfessoresCurso(String nomeCurso) {
     for (Curso curso in listaDeCursos) {
       if (curso.nome == nomeCurso) {
-        for (Pessoa pessoa in curso.pessoas) {
-          if (pessoa is Professor) {
-            print('Nome: ${pessoa.nome}');
-          }
+        Iterable<Professor> professoresDoCurso =
+            curso.pessoas.whereType<Professor>();
+        for (Professor professor in professoresDoCurso) {
+          print('Nome: ${professor.nome}');
         }
       } else {
-        return print('Curso não localizado');
+        print('Curso não localizado');
       }
     }
   }

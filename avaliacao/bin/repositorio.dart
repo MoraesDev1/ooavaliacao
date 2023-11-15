@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:test/expect.dart';
-
 import 'aluno.dart';
 import 'curso.dart';
 import 'pessoa.dart';
@@ -142,18 +139,31 @@ class Repositorios {
     }
   }
 
-  incluirPessoaCurso(String nomeCurso, String email) {
+  incluirAlunoCurso(String nomeCurso, String email) {
     for (Pessoa pessoa in cadastros) {
       if (pessoa.email == email && pessoa is Aluno) {
         for (Curso curso in listaDeCursos) {
           if (curso.nome == nomeCurso) {
-            curso.pessoas.add(pessoa);
-            return print('\nAluno cadastrado');
+            Iterable<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>();
+            if (curso.totalAlunos >= alunosDoCurso.length) {
+              curso.pessoas.add(pessoa);
+              return print('\nAluno cadastrado');
+            } else {
+              return print('Limite de alunos atingido para o Curso');
+            }
           } else {
             return print('\nCurso não localizado');
           }
         }
-      } else if (pessoa.email == email && pessoa is Professor) {
+      } else {
+        return print('\nE-mail não localizado na lista de Aluno');
+      }
+    }
+  }
+
+  incluirProfessorCurso(String nomeCurso, String email) {
+    for (Pessoa pessoa in cadastros) {
+      if (pessoa.email == email && pessoa is Professor) {
         for (Curso curso in listaDeCursos) {
           if (curso.nome == nomeCurso) {
             curso.pessoas.add(pessoa);
@@ -163,7 +173,7 @@ class Repositorios {
           }
         }
       } else {
-        return print('\nE-mail não localizado na lista de cadastros');
+        return print('\nE-mail não localizado na lista de Professores');
       }
     }
   }

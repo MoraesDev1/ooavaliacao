@@ -70,7 +70,7 @@ class Interface {
               Professor professor = criarProfessor();
               bool autorizaCadastrar =
                   rn.autorizaCadastrar(repo.cadastros, professor.email);
-              repo.cadastrarPessoa(professor);
+
               if (autorizaCadastrar) {
                 repo.cadastrarPessoa(professor);
                 print('Professor cadastrado');
@@ -125,7 +125,7 @@ class Interface {
                       //Inclusão de Aluno no curso
                       print('\nInforme o email do aluno a ser cadastrado:');
                       String email = stdin.readLineSync()!;
-                      repo.incluirPessoaCurso(nomeCurso, email);
+                      repo.incluirAlunoCurso(nomeCurso, email);
                     case '2':
                       //Remoção de Aluno do curso
                       print('\nInforme o email do aluno a ser removido:');
@@ -141,7 +141,7 @@ class Interface {
                       //Inclusão de Professor no curso
                       print('\nInforme o email do Professor a ser cadastrado:');
                       String email = stdin.readLineSync()!;
-                      repo.incluirPessoaCurso(nomeCurso, email);
+                      repo.incluirProfessorCurso(nomeCurso, email);
                     case '2':
                       //Remoção de Professor do curso
                       print('\nInforme o email do Professor a ser removido:');

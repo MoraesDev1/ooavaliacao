@@ -121,7 +121,7 @@ class Interface {
               switch (alunoOuProfessor) {
                 case '1':
                   String opAlteraCurso =
-                      pedeAlteracaoCurso(nomeCurso); //menualteracaoaluno
+                      pedeAlteracaoCursoAluno(nomeCurso); //menualteracaoaluno
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Aluno no curso
@@ -136,10 +136,21 @@ class Interface {
                     case '3':
                       //Listar Alunos
                       repo.listarAlunosCurso(nomeCurso);
+                    case '4':
+                      print('\nInforme o email do aluno desejado');
+                      String email = stdin.readLineSync()!;
+                      String opcNota = gerenciarNotas();
+                      switch (opcNota) {
+                        case '1':
+                          double nota = coletarNota();
+                          repo.lancarNotas(nomeCurso, email, nota);
+                        case '2':
+                          repo.exibirNotas(nomeCurso, email);
+                      }
                   }
                 case '2':
-                  String opAlteraCurso =
-                      pedeAlteracaoCurso(nomeCurso); // menualteracaoprof
+                  String opAlteraCurso = pedeAlteracaoCursoProfessor(
+                      nomeCurso); // menualteracaoprof
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Professor no curso
@@ -303,9 +314,16 @@ class Interface {
     return curso;
   }
 
-  String pedeAlteracaoCurso(String nomeCurso) {
+  String pedeAlteracaoCursoAluno(String nomeCurso) {
     print(
-        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1. Cadastrar\n2. Remover\n3. Listar');
+        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1 - Cadastrar\n2 - Remover\n3 - Listar\n4 - Lançar notas');
+    String opAlteraCurso = stdin.readLineSync()!;
+    return opAlteraCurso;
+  }
+
+  String pedeAlteracaoCursoProfessor(String nomeCurso) {
+    print(
+        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1 - Cadastrar\n2 - Remover\n3 - Listar');
     String opAlteraCurso = stdin.readLineSync()!;
     return opAlteraCurso;
   }
@@ -328,7 +346,15 @@ class Interface {
     return alunoOuProfessor;
   }
 
-  informarNota() {
-    return '';
+  String gerenciarNotas() {
+    print('\nVocê deseja:\n1 - Lançar notas\n2 - Exibir notas');
+    String opcNotas = stdin.readLineSync()!;
+    return opcNotas;
+  }
+
+  double coletarNota() {
+    print('Informe a nota do aluno:');
+    double nota = double.parse(stdin.readLineSync()!);
+    return nota;
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'aluno.dart';
 import 'curso.dart';
+import 'nota_aluno.dart';
 import 'pessoa.dart';
 import 'professor.dart';
 import 'utils.dart';
@@ -147,6 +148,7 @@ class Repositorios {
             Iterable<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>();
             if (curso.totalAlunos >= alunosDoCurso.length) {
               curso.pessoas.add(pessoa);
+              pessoa.notas.add(NotaAluno(notas: [], curso: curso));
               return print('\nAluno cadastrado');
             } else {
               return print('Limite de alunos atingido para o Curso');
@@ -224,4 +226,28 @@ class Repositorios {
       }
     }
   }
+
+  lancarNotas(String nomeCurso, String email, double nota) {
+    for (Pessoa pessoa in cadastros) {
+      if (pessoa.email == email && pessoa is Aluno) {
+        for (Curso curso in listaDeCursos) {
+          if (curso.nome == nomeCurso && curso.pessoas.contains(pessoa)) {
+            pessoa.notas.forEach(
+              (element) {
+                if (element.notas.length <= 3) {
+                  element.notas.add(nota);
+                  print('Nota lançada com sucesso');
+                } else {
+                  print(
+                      'Não foi possível lançar a nota pois todas as notas já foram lançadas');
+                }
+              },
+            );
+          }
+        }
+      }
+    }
+  }
+
+  exibirNotas(String nomeCurso, String email) {}
 }

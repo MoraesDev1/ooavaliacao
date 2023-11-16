@@ -116,6 +116,7 @@ class Interface {
                     break;
                   default:
                     print('Opção inválida');
+                    break;
                 }
               }
             case '3':
@@ -491,7 +492,7 @@ class Interface {
 
   alteraLimiteAlunos(Curso curso) {
     int novoLimiteDeAlunos = 1;
-    while (novoLimiteDeAlunos < 0) {
+    while (novoLimiteDeAlunos > 0) {
       print('\nInforme o novo limite:');
       novoLimiteDeAlunos = int.parse(stdin.readLineSync()!);
     }

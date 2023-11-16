@@ -488,14 +488,16 @@ class Interface {
       novoNome = stdin.readLineSync()!;
     }
     curso.nome = novoNome;
+    print('Nome Alterado');
   }
 
   alteraLimiteAlunos(Curso curso) {
-    int novoLimiteDeAlunos = 1;
-    while (novoLimiteDeAlunos > 0) {
+    int novoLimiteDeAlunos = 0;
+    while (novoLimiteDeAlunos <= 0) {
       print('\nInforme o novo limite:');
       novoLimiteDeAlunos = int.parse(stdin.readLineSync()!);
     }
     curso.totalAlunos = novoLimiteDeAlunos;
+    print('Limite alterado');
   }
 }

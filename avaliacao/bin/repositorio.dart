@@ -149,6 +149,7 @@ class Repositorios {
 
   excluirCurso(Curso curso) {
     listaDeCursos.remove(curso);
+    print('Curso Excluido');
   }
 
   bool verificaSeAlunoEstaCadastradoNoCurso(Curso curso, Aluno aluno) {

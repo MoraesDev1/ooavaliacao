@@ -126,8 +126,9 @@ class Repositorios {
   listarCursos() {
     print('Cursos:');
     for (Curso curso in listaDeCursos) {
+      List<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>().toList();
       print(
-          '\nCurso: ${curso.nome}\nMáximo de alunos: ${curso.totalAlunos}\nAlunos Cadastrados: ${curso.pessoas.length}\n');
+          '\nCurso: ${curso.nome}\nMáximo de alunos: ${curso.totalAlunos}\nAlunos Cadastrados: ${alunosDoCurso.length}\nPessoas Cadastradas: ${curso.pessoas.length}');
     }
   }
 
@@ -202,7 +203,12 @@ class Repositorios {
 
   removerAlunoDoCurso(Curso curso, Aluno aluno) {
     curso.pessoas.remove(aluno);
-    aluno.notas.remove(NotaAluno(curso: curso, notas: []));
+    for (NotaAluno notaAluno in aluno.notas) {
+      if (notaAluno.curso == curso) {
+        aluno.notas.remove(notaAluno);
+        break;
+      }
+    }
     print('Aluno removido');
   }
 
@@ -226,43 +232,10 @@ class Repositorios {
     }
   }
 
-  lancarNotas(String nomeCurso, String email, double nota) {
-    for (Pessoa pessoa in cadastros) {
-      if (pessoa.email == email && pessoa is Aluno) {
-        for (Curso curso in listaDeCursos) {
-          if (curso.nome == nomeCurso && curso.pessoas.contains(pessoa)) {
-            pessoa.notas.forEach(
-              (element) {
-                if (element.notas.length <= 3) {
-                  element.notas.add(nota);
-                  print('Nota lançada com sucesso');
-                } else {
-                  print(
-                      'Não foi possível lançar a nota pois todas as notas já foram lançadas');
-                }
-              },
-            );
-          }
-        }
-      }
-    }
-  }
-
-  exibirNotas(String nomeCurso, String email) {
-    for (Pessoa pessoa in cadastros) {
-      if (pessoa.email == email && pessoa is Aluno) {
-        for (Curso curso in listaDeCursos) {
-          if (curso.nome == nomeCurso && curso.pessoas.contains(pessoa)) {
-            pessoa.notas.forEach(
-              (element) {
-                if (element.curso.nome == nomeCurso) {
-                  print(
-                      '\nNota 1: ${element.notas[0]}\nNota 2: ${element.notas[1]}\nNota 3: ${element.notas[2]}');
-                }
-              },
-            );
-          }
-        }
+  buscaListaDeNotasDoAlunoNoCurso(Aluno aluno, Curso curso) {
+    for (NotaAluno notasLancadas in aluno.notas) {
+      if (notasLancadas.curso == curso) {
+        return notasLancadas.notas;
       }
     }
   }

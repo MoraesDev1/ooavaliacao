@@ -164,7 +164,6 @@ class Interface {
                       } else {
                         print('\nE-mail não localizado na lista de Aluno');
                       }
-
                     case '2':
                       //Remoção de Aluno do curso
                       print('\nInforme o email do aluno a ser removido:');
@@ -191,15 +190,67 @@ class Interface {
                       Curso curso = repo.buscaCursoEmListaDeCursos(nomeCurso);
                       repo.listarAlunosCurso(curso);
                     case '4':
-                      print('\nInforme o email do aluno desejado');
+                      print(
+                          '\nInforme o email do aluno que deseja gerenciar as notas:');
                       String email = stdin.readLineSync()!;
-                      String opcNota = gerenciarNotas();
-                      switch (opcNota) {
-                        case '1':
-                          double nota = coletarNota();
-                          repo.lancarNotas(nomeCurso, email, nota);
-                        case '2':
-                          repo.exibirNotas(nomeCurso, email);
+                      if (rn.cadastroExistente(repo.cadastros, email)) {
+                        if (repo.cursoExistente(nomeCurso)) {
+                          Aluno aluno = repo.buscaPessoaEmCadastros(email);
+                          Curso curso =
+                              repo.buscaCursoEmListaDeCursos(nomeCurso);
+                          if (repo.verificaSeAlunoEstaCadastradoNoCurso(
+                              curso, aluno)) {
+                            String acaoNota = menuGerenciarNotas();
+                            List<double> notas = repo
+                                .buscaListaDeNotasDoAlunoNoCurso(aluno, curso);
+                            switch (acaoNota) {
+                              case '1':
+                                lancarNotas(notas);
+                                break;
+                              case '2':
+                                if (notas.isNotEmpty) {
+                                  alterarNotas(notas);
+                                  break;
+                                } else {
+                                  print('Aluno não tem notas lançadas');
+                                  break;
+                                }
+                              case '3':
+                                if (notas.isNotEmpty) {
+                                  excluirNotas(notas);
+                                  break;
+                                } else {
+                                  print('Aluno não tem notas lançadas');
+                                  break;
+                                }
+                              case '4':
+                                if (notas.isNotEmpty) {
+                                  exibirNotas(notas);
+                                  break;
+                                } else {
+                                  print('Aluno não tem notas lançadas');
+                                  break;
+                                }
+                              case '5':
+                                if (notas.isNotEmpty) {
+                                  exibirMedia(notas);
+                                  break;
+                                } else {
+                                  print('Aluno não tem notas lançadas');
+                                  break;
+                                }
+
+                              default:
+                                print('Ação inválida');
+                            }
+                          } else {
+                            print('Aluno não cadastrado no curso');
+                          }
+                        } else {
+                          print('\nCurso não localizado');
+                        }
+                      } else {
+                        print('\nE-mail não localizado na lista de Aluno');
                       }
                   }
                 case '2':
@@ -395,8 +446,15 @@ class Interface {
   }
 
   String identificadorCurso() {
-    print('\nInforme o nome do curso:');
-    String nome = stdin.readLineSync()!;
+    String nome = '';
+    do {
+      print('\nInforme o nome do curso:');
+      nome = stdin.readLineSync()!;
+      if (repo.cursoExistente(nome) == false) {
+        print('Curso não localizado');
+      }
+    } while (repo.cursoExistente(nome) == false);
+
     return nome;
   }
 
@@ -432,7 +490,14 @@ class Interface {
 
   String pedeAlteracaoCursoAluno(String nomeCurso) {
     print(
-        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1 - Cadastrar\n2 - Remover\n3 - Listar\n4 - Lançar notas');
+        '\nQual alteração você deseja realizar no curso $nomeCurso?\n1 - Cadastrar\n2 - Remover\n3 - Listar\n4 - Gerenciar notas');
+    String opAlteraCurso = stdin.readLineSync()!;
+    return opAlteraCurso;
+  }
+
+  String menuGerenciarNotas() {
+    print(
+        '\nQual ação deseja realizar?\n1 - Lançar notas\n2 - Alterar notas\n3 - Excluir notas\n4 - Exibir notas\n5 - Exibir Média Aritimética');
     String opAlteraCurso = stdin.readLineSync()!;
     return opAlteraCurso;
   }
@@ -499,5 +564,118 @@ class Interface {
     }
     curso.totalAlunos = novoLimiteDeAlunos;
     print('Limite alterado');
+  }
+
+  bool verificaSeLimiteDeNotasFoiAtingido(List<double> notas) {
+    if (notas.length < 3) {
+      return false;
+    }
+    return true;
+  }
+
+  lancarNotas(List<double> notas) {
+    while (verificaSeLimiteDeNotasFoiAtingido(notas) == false) {
+      double nota = 0;
+      while (nota <= 0) {
+        print('Informe uma nota:');
+        nota = double.parse(stdin.readLineSync()!);
+      }
+      notas.add(nota);
+    }
+    print('Limite de notas atingido');
+  }
+
+  alterarNotas(List<double> notas) {
+    if (notas.isNotEmpty) {
+      exibirNotas(notas);
+    }
+    String notaEscolhida = '';
+    if (notas.length == 1) {
+      print('Qual nota deseja alterar?\n1 - Nota 1');
+      notaEscolhida = stdin.readLineSync()!;
+    } else if (notas.length == 2) {
+      print('Qual nota deseja alterar?\n1 - Nota 1\n2 - Nota 2');
+      notaEscolhida = stdin.readLineSync()!;
+    } else if (notas.length == 3) {
+      print('Qual nota deseja alterar?\n1 - Nota 1\n2 - Nota 2\n3 - Nota 3');
+      notaEscolhida = stdin.readLineSync()!;
+    }
+
+    double notaNova = 0;
+    while (notaNova <= 0) {
+      print('Informe uma nota:');
+      notaNova = double.parse(stdin.readLineSync()!);
+    }
+
+    switch (notaEscolhida) {
+      case '1':
+        notas[0] = notaNova;
+        print('Nota alterada');
+        break;
+      case '2':
+        notas[1] = notaNova;
+        print('Nota alterada');
+        break;
+      case '3':
+        notas[2] = notaNova;
+        print('Nota alterada');
+        break;
+      default:
+        print('Opção invalida');
+        break;
+    }
+  }
+
+  excluirNotas(List<double> notas) {
+    if (notas.isNotEmpty) {
+      exibirNotas(notas);
+    }
+    String notaEscolhida = '';
+    if (notas.length == 1) {
+      print('Qual nota deseja excluir?\n1 - Nota 1');
+      notaEscolhida = stdin.readLineSync()!;
+    } else if (notas.length == 2) {
+      print('Qual nota deseja excluir?\n1 - Nota 1\n2 - Nota 2');
+      notaEscolhida = stdin.readLineSync()!;
+    } else if (notas.length == 3) {
+      print('Qual nota deseja excluir?\n1 - Nota 1\n2 - Nota 2\n3 - Nota 3');
+      notaEscolhida = stdin.readLineSync()!;
+    }
+
+    switch (notaEscolhida) {
+      case '1':
+        notas.remove(notas[0]);
+        print('Nota removida');
+        break;
+      case '2':
+        notas.remove(notas[1]);
+        print('Nota removida');
+        break;
+      case '3':
+        notas.remove(notas[2]);
+        print('Nota removida');
+        break;
+      default:
+        print('Opção invalida');
+        break;
+    }
+  }
+
+  exibirNotas(List<double> notas) {
+    print('O aluno tem ${notas.length} notas lançadas, segue abaixo as notas:');
+    for (double nota in notas) {
+      print('Nota ${notas.indexOf(nota) + 1}: $nota');
+    }
+  }
+
+  exibirMedia(List<double> notas) {
+    double somaDasNotas = 0;
+    int qtdDeNotas = 0;
+    for (double nota in notas) {
+      somaDasNotas += nota;
+      qtdDeNotas++;
+    }
+    double media = somaDasNotas / qtdDeNotas;
+    print('A média aritimética é ${media.toStringAsFixed(2)}');
   }
 }

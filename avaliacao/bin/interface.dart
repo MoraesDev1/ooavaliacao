@@ -162,10 +162,27 @@ class Interface {
                       //Remoção de Aluno do curso
                       print('\nInforme o email do aluno a ser removido:');
                       String email = stdin.readLineSync()!;
-                      repo.removerPessoaCurso(nomeCurso, email);
+                      if (rn.cadastroExistente(repo.cadastros, email)) {
+                        if (repo.cursoExistente(nomeCurso)) {
+                          Aluno aluno = repo.buscaPessoaEmCadastros(email);
+                          Curso curso =
+                              repo.buscaCursoEmListaDeCursos(nomeCurso);
+                          if (repo.verificaSeAlunoEstaCadastradoNoCurso(
+                              curso, aluno)) {
+                            repo.removerAlunoDoCurso(curso, aluno);
+                          } else {
+                            print('Aluno não cadastrado no curso');
+                          }
+                        } else {
+                          print('Curso não localizado');
+                        }
+                      } else {
+                        print('Cadastro não localizado');
+                      }
                     case '3':
                       //Listar Alunos
-                      repo.listarAlunosCurso(nomeCurso);
+                      Curso curso = repo.buscaCursoEmListaDeCursos(nomeCurso);
+                      repo.listarAlunosCurso(curso);
                     case '4':
                       print('\nInforme o email do aluno desejado');
                       String email = stdin.readLineSync()!;
@@ -203,11 +220,29 @@ class Interface {
                       //Remoção de Professor do curso
                       print('\nInforme o email do Professor a ser removido:');
                       String email = stdin.readLineSync()!;
-                      repo.removerPessoaCurso(nomeCurso, email);
+                      if (rn.cadastroExistente(repo.cadastros, email)) {
+                        if (repo.cursoExistente(nomeCurso)) {
+                          Professor professor =
+                              repo.buscaPessoaEmCadastros(email);
+                          Curso curso =
+                              repo.buscaCursoEmListaDeCursos(nomeCurso);
+                          if (repo.verificaSeProfessorEstaCadastradoNoCurso(
+                              curso, professor)) {
+                            repo.removerProfessorDoCurso(curso, professor);
+                          } else {
+                            print('Professor não cadastrado no curso');
+                          }
+                        } else {
+                          print('Curso não localizado');
+                        }
+                      } else {
+                        print('Cadastro não localizado');
+                      }
 
                     case '3':
                       //Listar professores.
-                      repo.listarProfessoresCurso(nomeCurso);
+                      Curso curso = repo.buscaCursoEmListaDeCursos(nomeCurso);
+                      repo.listarProfessoresCurso(curso);
                   }
               }
               break;
@@ -229,7 +264,7 @@ class Interface {
     print('''\nPara quem deseja realizar um serviço:
              1. Aluno
              2. Professor
-             3. Curos
+             3. Cursos
              0. Sair''');
     objEscolhido = stdin.readLineSync()!.toLowerCase();
     return objEscolhido;

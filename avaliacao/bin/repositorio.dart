@@ -164,6 +164,14 @@ class Repositorios {
     return false;
   }
 
+  bool verificaSeProfessorEstaCadastradoNoCurso(
+      Curso curso, Professor professor) {
+    if (curso.pessoas.contains(professor)) {
+      return true;
+    }
+    return false;
+  }
+
   incluirAlunoCurso(Curso curso, Aluno aluno) {
     List<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>().toList();
     if (curso.totalAlunos > alunosDoCurso.length) {
@@ -196,50 +204,29 @@ class Repositorios {
     print('\nProfessor cadastrado');
   }
 
-  removerPessoaCurso(String nomeCurso, String email) {
-    for (Curso curso in listaDeCursos) {
-      if (curso.nome == nomeCurso) {
-        for (Pessoa pessoa in curso.pessoas) {
-          if (pessoa.email == email && pessoa is Aluno) {
-            curso.pessoas.remove(pessoa);
-            return print('Aluno removido');
-          } else if (pessoa.email == email && pessoa is Professor) {
-            curso.pessoas.remove(pessoa);
-            return print('Professor removido');
-          } else {
-            return print('E-mail não localizado para este curso');
-          }
-        }
-      }
+  removerAlunoDoCurso(Curso curso, Aluno aluno) {
+    curso.pessoas.remove(aluno);
+    aluno.notas.remove(NotaAluno(curso: curso, notas: []));
+    print('Aluno removido');
+  }
+
+  removerProfessorDoCurso(Curso curso, Professor professor) {
+    curso.pessoas.remove(professor);
+    print('Professor removido');
+  }
+
+  listarAlunosCurso(Curso curso) {
+    List<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>().toList();
+    for (Aluno aluno in alunosDoCurso) {
+      print('Nome: ${aluno.nome}');
     }
   }
 
-  listarAlunosCurso(String nomeCurso) {
-    for (Curso curso in listaDeCursos) {
-      if (curso.nome == nomeCurso) {
-        print('\nAlunos cadastrados no curso de $nomeCurso:\n');
-        for (Pessoa pessoa in curso.pessoas) {
-          if (pessoa is Aluno) {
-            print('Nome: ${pessoa.nome}');
-          }
-        }
-      } else {
-        return print('Curso não localizado');
-      }
-    }
-  }
-
-  listarProfessoresCurso(String nomeCurso) {
-    for (Curso curso in listaDeCursos) {
-      if (curso.nome == nomeCurso) {
-        Iterable<Professor> professoresDoCurso =
-            curso.pessoas.whereType<Professor>();
-        for (Professor professor in professoresDoCurso) {
-          print('Nome: ${professor.nome}');
-        }
-      } else {
-        print('Curso não localizado');
-      }
+  listarProfessoresCurso(Curso curso) {
+    Iterable<Professor> professoresDoCurso =
+        curso.pessoas.whereType<Professor>();
+    for (Professor professor in professoresDoCurso) {
+      print('Nome: ${professor.nome}');
     }
   }
 

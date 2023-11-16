@@ -131,7 +131,7 @@ class Repositorios {
     }
   }
 
-  cursoExistente(String nomeCurso) {
+  bool cursoExistente(String nomeCurso) {
     for (Curso curso in listaDeCursos) {
       if (curso.nome == nomeCurso) {
         return true;
@@ -140,20 +140,15 @@ class Repositorios {
     return false;
   }
 
-  excluirCurso(String nome) {
-    for (Curso curso in listaDeCursos) {
-      if (curso.pessoas.isEmpty && curso.nome == nome) {
-        listaDeCursos.remove(curso);
-        print('\nCurso removido');
-        break;
-      } else if (curso.pessoas.isNotEmpty && curso.nome == nome) {
-        print(
-            '\nO curso $nome tem ${curso.pessoas.length} pessoas cadastradas!\nUm curso não pode ser excluído com alunos cadastrados!');
-        break;
-      } else if (listaDeCursos.contains(curso)) {
-        return false;
-      }
+  bool cursoSemPessoasCadastradas(Curso curso) {
+    if (curso.pessoas.isEmpty) {
+      return true;
     }
+    return false;
+  }
+
+  excluirCurso(Curso curso) {
+    listaDeCursos.remove(curso);
   }
 
   bool verificaSeAlunoEstaCadastradoNoCurso(Curso curso, Aluno aluno) {

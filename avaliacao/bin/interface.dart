@@ -121,7 +121,13 @@ class Interface {
             case '3':
               String nomeCurso = identificadorCurso();
               if (repo.cursoExistente(nomeCurso)) {
-                repo.excluirCurso(nomeCurso);
+                Curso curso = repo.buscaCursoEmListaDeCursos(nomeCurso);
+                if (repo.cursoSemPessoasCadastradas(curso)) {
+                  repo.excluirCurso(curso);
+                } else {
+                  print(
+                      '\nO curso tem pessoas cadastradas!\nUm curso não pode ser excluído com pessoas cadastradas!');
+                }
               } else {
                 print('Curso não encontrado');
               }

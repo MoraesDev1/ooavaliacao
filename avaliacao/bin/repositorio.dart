@@ -12,6 +12,7 @@ class Repositorios {
 
   cadastrarPessoa(Pessoa pessoa) {
     cadastros.add(pessoa);
+    print('Cadastro realizado');
   }
 
   listarAlunos() {
@@ -40,8 +41,11 @@ class Repositorios {
 
   excluirAluno(String email) {
     for (Pessoa cadastro in cadastros) {
-      if (cadastro is Aluno && cadastro.email == email) {
+      if (cadastro is Aluno &&
+          cadastro.email == email &&
+          cadastro.notas.isEmpty) {
         cadastros.remove(cadastro);
+        print('Aluno removido');
         break;
       }
     }
@@ -51,6 +55,7 @@ class Repositorios {
     for (Pessoa cadastro in cadastros) {
       if (cadastro is Professor && cadastro.email == email) {
         cadastros.remove(cadastro);
+        print('Professor removido');
         break;
       }
     }
@@ -126,58 +131,69 @@ class Repositorios {
     }
   }
 
+  cursoExistente(String nomeCurso) {
+    for (Curso curso in listaDeCursos) {
+      if (curso.nome == nomeCurso) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   excluirCurso(String nome) {
     for (Curso curso in listaDeCursos) {
       if (curso.pessoas.isEmpty && curso.nome == nome) {
         listaDeCursos.remove(curso);
-        return print('\nCurso removido');
+        print('\nCurso removido');
+        break;
       } else if (curso.pessoas.isNotEmpty && curso.nome == nome) {
-        return print(
+        print(
             '\nO curso $nome tem ${curso.pessoas.length} pessoas cadastradas!\nUm curso não pode ser excluído com alunos cadastrados!');
-      } else {
-        return print('\nCurso inexistente.');
+        break;
+      } else if (listaDeCursos.contains(curso)) {
+        return false;
       }
     }
   }
 
-  incluirAlunoCurso(String nomeCurso, String email) {
+  bool verificaSeAlunoEstaCadastradoNoCurso(Curso curso, Aluno aluno) {
+    List<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>().toList();
+    if (alunosDoCurso.contains(aluno)) {
+      return true;
+    }
+    return false;
+  }
+
+  incluirAlunoCurso(Curso curso, Aluno aluno) {
+    List<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>().toList();
+    if (curso.totalAlunos > alunosDoCurso.length) {
+      curso.pessoas.add(aluno);
+      aluno.notas.add(NotaAluno(notas: <double>[], curso: curso));
+      print('\nAluno cadastrado');
+    } else {
+      print('Limite de alunos atingido para o Curso');
+    }
+  }
+
+  buscaPessoaEmCadastros(String email) {
     for (Pessoa pessoa in cadastros) {
-      if (pessoa.email == email && pessoa is Aluno) {
-        for (Curso curso in listaDeCursos) {
-          if (curso.nome == nomeCurso) {
-            Iterable<Aluno> alunosDoCurso = curso.pessoas.whereType<Aluno>();
-            if (curso.totalAlunos >= alunosDoCurso.length) {
-              curso.pessoas.add(pessoa);
-              pessoa.notas.add(NotaAluno(notas: [], curso: curso));
-              return print('\nAluno cadastrado');
-            } else {
-              return print('Limite de alunos atingido para o Curso');
-            }
-          } else {
-            return print('\nCurso não localizado');
-          }
-        }
-      } else {
-        return print('\nE-mail não localizado na lista de Aluno');
+      if (email == pessoa.email) {
+        return pessoa;
       }
     }
   }
 
-  incluirProfessorCurso(String nomeCurso, String email) {
-    for (Pessoa pessoa in cadastros) {
-      if (pessoa.email == email && pessoa is Professor) {
-        for (Curso curso in listaDeCursos) {
-          if (curso.nome == nomeCurso) {
-            curso.pessoas.add(pessoa);
-            return print('\nProfessor cadastrado');
-          } else {
-            return print('\nCurso não localizado');
-          }
-        }
-      } else {
-        return print('\nE-mail não localizado na lista de Professores');
+  buscaCursoEmListaDeCursos(String nomeCurso) {
+    for (Curso curso in listaDeCursos) {
+      if (nomeCurso == curso.nome) {
+        return curso;
       }
     }
+  }
+
+  incluirProfessorCurso(Curso curso, Professor professor) {
+    curso.pessoas.add(professor);
+    print('\nProfessor cadastrado');
   }
 
   removerPessoaCurso(String nomeCurso, String email) {

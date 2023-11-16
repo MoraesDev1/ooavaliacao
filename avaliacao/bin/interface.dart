@@ -19,22 +19,13 @@ class Interface {
       if (objEscolhido == '0') {
         break;
       }
-      String acao = menuServicos();
       switch (objEscolhido) {
         case '1':
+          String acao = menuServicosPessoa();
           switch (acao) {
             case '1':
               Aluno aluno = criarAluno();
-              bool
-                  autorizaCadastrar = //verificação de email deve ocorrer ao solicitar o email
-                  rn.autorizaCadastrar(repo.cadastros, aluno.email);
-              if (autorizaCadastrar) {
-                repo.cadastrarPessoa(aluno);
-                print('Aluno Cadastrado');
-              } else {
-                Pessoa.codigo--;
-                print('E-mail informado já cadastrado');
-              }
+              repo.cadastrarPessoa(aluno);
               break;
             case '2':
               String identificador = pedeIdentificador();
@@ -47,13 +38,14 @@ class Interface {
               break;
             case '3':
               String email = pedeIdentificador();
-              bool autorizaRemover =
-                  rn.cadastroExistente(repo.cadastros, email);
-              if (autorizaRemover) {
-                repo.excluirAluno(email);
-                print('Aluno removido');
+              if (rn.cadastroExistente(repo.cadastros, email)) {
+                if (rn.alunoNaoCadastradoEmCursos(email, repo.cadastros)) {
+                  repo.excluirAluno(email);
+                } else {
+                  print('Aluno cadastrado em curso(s), não é possivel excluir');
+                }
               } else {
-                print('Aluno não localizado');
+                print('Cadastro não localizado na lista de Alunos');
               }
               break;
             case '4':
@@ -65,19 +57,11 @@ class Interface {
           }
           break;
         case '2':
+          String acao = menuServicosPessoa();
           switch (acao) {
             case '1':
               Professor professor = criarProfessor();
-              bool autorizaCadastrar =
-                  rn.autorizaCadastrar(repo.cadastros, professor.email);
-
-              if (autorizaCadastrar) {
-                repo.cadastrarPessoa(professor);
-                print('Professor cadastrado');
-              } else {
-                Pessoa.codigo--;
-                print('E-mail informado já cadastrado');
-              }
+              repo.cadastrarPessoa(professor);
               break;
             case '2':
               String identificador = pedeIdentificador();
@@ -90,13 +74,16 @@ class Interface {
               break;
             case '3':
               String email = pedeIdentificador();
-              bool autorizaRemover =
-                  rn.cadastroExistente(repo.cadastros, email);
-              if (autorizaRemover) {
-                repo.excluirProfessor(email);
-                print('Professor removido');
+              if (rn.cadastroExistente(repo.cadastros, email)) {
+                if (rn.professorNaoCadastradoEmCursos(
+                    email, repo.cadastros, repo.listaDeCursos)) {
+                  repo.excluirProfessor(email);
+                } else {
+                  print(
+                      'Professor cadastrado em curso(s), não é possivel excluir');
+                }
               } else {
-                print('Professor não localizado');
+                print('Cadastro não localizado na lista de Professores');
               }
               break;
             case '4':
@@ -108,6 +95,7 @@ class Interface {
           }
           break;
         case '3':
+          String acao = menuServicosCurso();
           switch (acao) {
             case '1':
               Curso curso = criarCurso();
@@ -116,18 +104,60 @@ class Interface {
               break;
             case '2':
               String nomeCurso = identificadorCurso();
+              if (repo.cursoExistente(nomeCurso)) {
+                String acao = pedeAlteracaoCurso();
+                Curso curso = repo.buscaCursoEmListaDeCursos(nomeCurso);
+                switch (acao) {
+                  case '1':
+                    alteraNomeCurso(curso);
+                    break;
+                  case '2':
+                    alteraLimiteAlunos(curso);
+                    break;
+                  default:
+                    print('Opção inválida');
+                }
+              }
+            case '3':
+              String nomeCurso = identificadorCurso();
+              if (repo.cursoExistente(nomeCurso)) {
+                repo.excluirCurso(nomeCurso);
+              } else {
+                print('Curso não encontrado');
+              }
+              break;
+            case '4':
+              repo.listarCursos();
+              break;
+            case '5':
+              String nomeCurso = identificadorCurso();
               String alunoOuProfessor = menuAlunoOuProfessor();
-
               switch (alunoOuProfessor) {
                 case '1':
-                  String opAlteraCurso =
-                      pedeAlteracaoCursoAluno(nomeCurso); //menualteracaoaluno
+                  String opAlteraCurso = pedeAlteracaoCursoAluno(nomeCurso);
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Aluno no curso
                       print('\nInforme o email do aluno a ser cadastrado:');
                       String email = stdin.readLineSync()!;
-                      repo.incluirAlunoCurso(nomeCurso, email);
+                      if (rn.cadastroExistente(repo.cadastros, email)) {
+                        if (repo.cursoExistente(nomeCurso)) {
+                          Aluno aluno = repo.buscaPessoaEmCadastros(email);
+                          Curso curso =
+                              repo.buscaCursoEmListaDeCursos(nomeCurso);
+                          if (repo.verificaSeAlunoEstaCadastradoNoCurso(
+                              curso, aluno)) {
+                            print('Aluno já cadastrado no curso');
+                          } else {
+                            repo.incluirAlunoCurso(curso, aluno);
+                          }
+                        } else {
+                          print('\nCurso não localizado');
+                        }
+                      } else {
+                        print('\nE-mail não localizado na lista de Aluno');
+                      }
+
                     case '2':
                       //Remoção de Aluno do curso
                       print('\nInforme o email do aluno a ser removido:');
@@ -149,14 +179,26 @@ class Interface {
                       }
                   }
                 case '2':
-                  String opAlteraCurso = pedeAlteracaoCursoProfessor(
-                      nomeCurso); // menualteracaoprof
+                  String opAlteraCurso = pedeAlteracaoCursoProfessor(nomeCurso);
                   switch (opAlteraCurso) {
                     case '1':
                       //Inclusão de Professor no curso
-                      print('\nInforme o email do Professor a ser cadastrado:');
+                      print('\nInforme o email do professor a ser cadastrado:');
                       String email = stdin.readLineSync()!;
-                      repo.incluirProfessorCurso(nomeCurso, email);
+                      if (rn.cadastroExistente(repo.cadastros, email)) {
+                        if (repo.cursoExistente(nomeCurso)) {
+                          Professor professor =
+                              repo.buscaPessoaEmCadastros(email);
+                          Curso curso =
+                              repo.buscaCursoEmListaDeCursos(nomeCurso);
+                          repo.incluirProfessorCurso(curso, professor);
+                        } else {
+                          print('\nCurso não localizado');
+                        }
+                      } else {
+                        print(
+                            '\nE-mail não localizado na lista de Professores');
+                      }
                     case '2':
                       //Remoção de Professor do curso
                       print('\nInforme o email do Professor a ser removido:');
@@ -168,13 +210,6 @@ class Interface {
                       repo.listarProfessoresCurso(nomeCurso);
                   }
               }
-              break;
-            case '3':
-              String nomeCurso = identificadorCurso();
-              repo.excluirCurso(nomeCurso);
-              break;
-            case '4':
-              repo.listarCursos();
               break;
             default:
               print('Opção inválida');
@@ -200,7 +235,7 @@ class Interface {
     return objEscolhido;
   }
 
-  String menuServicos() {
+  String menuServicosPessoa() {
     print('''\nInforme o número da ação desejada: 
              1. Criar
              2. Alterar
@@ -210,16 +245,35 @@ class Interface {
     return opcServicos;
   }
 
+  String menuServicosCurso() {
+    print('''\nInforme o número da ação desejada: 
+             1. Criar
+             2. Alterar
+             3. Excluir
+             4. Listar
+             5. Gerenciar''');
+    String opcServicos = stdin.readLineSync()!;
+    return opcServicos;
+  }
+
   Aluno criarAluno() {
     String nomeAluno = '';
     String dataNascimentoStr = '';
-    String email = '';
+    String email = 'invalido';
     String? endereco;
     int registro = Pessoa.codigo;
     List<NotaAluno> notas = [];
 
-    print('\nInforme o e-mail: ');
-    email = stdin.readLineSync()!;
+    while (email == 'invalido') {
+      print('\nInforme o e-mail: ');
+      email = stdin.readLineSync()!;
+      if (rn.autorizaCadastrar(repo.cadastros, email)) {
+        print('E-mail já cadastrado');
+        email = 'invalido';
+      } else {
+        break;
+      }
+    }
 
     print('\nInforme o nome: ');
     nomeAluno = stdin.readLineSync()!;
@@ -246,12 +300,21 @@ class Interface {
   Professor criarProfessor() {
     String nomeProfessor = '';
     String dataNascimentoStr = '';
-    String email = '';
+    String email = 'invalido';
     String? endereco;
     int registro = Pessoa.codigo;
 
-    print('\nInforme o e-mail: ');
-    email = stdin.readLineSync()!;
+    while (email == 'invalido') {
+      print('\nInforme o e-mail: ');
+      email = stdin.readLineSync()!;
+      if (rn.autorizaCadastrar(repo.cadastros, email)) {
+        print('E-mail já cadastrado');
+        email = 'invalido';
+      } else {
+        break;
+      }
+    }
+
     print('\nInforme o nome: ');
     nomeProfessor = stdin.readLineSync()!;
 
@@ -301,10 +364,21 @@ class Interface {
     List<Pessoa> alunosDoCurso = [];
     int idCurso = Curso.codigo;
 
-    print('\nInforme o nome do curso: ');
-    nome = stdin.readLineSync()!;
-    print('\nInforme o total de alunos: ');
-    totalAlunos = int.parse(stdin.readLineSync()!);
+    do {
+      print('\nInforme o nome do curso: ');
+      nome = stdin.readLineSync()!;
+      if (repo.cursoExistente(nome)) {
+        print('Curso já existe');
+      }
+    } while (repo.cursoExistente(nome));
+
+    do {
+      print('\nInforme o total de alunos: ');
+      totalAlunos = int.parse(stdin.readLineSync()!);
+      if (totalAlunos <= 0) {
+        print('Não é possível criar um limite menor que 1');
+      }
+    } while (totalAlunos <= 0);
 
     Curso curso = Curso(
         nome: nome,
@@ -356,5 +430,30 @@ class Interface {
     print('Informe a nota do aluno:');
     double nota = double.parse(stdin.readLineSync()!);
     return nota;
+  }
+
+  String pedeAlteracaoCurso() {
+    print(
+        '\nQual alteração deseja realizar:\n1 - Alterar nome\n2 - Alterar limite de alunos');
+    String acao = stdin.readLineSync()!;
+    return acao;
+  }
+
+  alteraNomeCurso(Curso curso) {
+    String novoNome = '';
+    while (novoNome == '') {
+      print('\nInforme o novo nome:');
+      novoNome = stdin.readLineSync()!;
+    }
+    curso.nome = novoNome;
+  }
+
+  alteraLimiteAlunos(Curso curso) {
+    int novoLimiteDeAlunos = 1;
+    while (novoLimiteDeAlunos < 0) {
+      print('\nInforme o novo limite:');
+      novoLimiteDeAlunos = int.parse(stdin.readLineSync()!);
+    }
+    curso.totalAlunos = novoLimiteDeAlunos;
   }
 }

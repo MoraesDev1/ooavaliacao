@@ -5,7 +5,8 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Dart & Flutter",
+            "name": "avaliacao",
+            "cwd": "avaliacao",
             "request": "launch",
             "type": "dart",
             "console": "terminal"
